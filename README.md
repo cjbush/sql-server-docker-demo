@@ -6,7 +6,7 @@ A `docker-compose` setup that spins up a Microsoft SQL Server container with a *
 
 ### 1. Install WSL2
 
-WSL2 (Windows Subsystem for Linux 2) is required to run Linux containers on Windows.
+WSL2 (Windows Subsystem for Linux 2) is required as the backend for Podman on Windows.
 
 1. Open **PowerShell as Administrator** and run:
 
@@ -32,49 +32,46 @@ WSL2 (Windows Subsystem for Linux 2) is required to run Linux containers on Wind
 
 > **Note:** WSL2 requires Windows 10 version 2004 (build 19041) or later, or Windows 11. Run `winver` to check your build.
 
-### 2. Install Podman inside WSL2
+### 2. Install Podman Desktop for Windows
 
-All commands below are run inside the **Ubuntu WSL2 terminal**.
+Podman runs natively on Windows and uses WSL2 as its container backend — no Docker Desktop required.
 
-1. Update packages and install Podman:
+1. Download the latest **Podman Desktop** installer from [podman-desktop.io](https://podman-desktop.io/).
 
-   ```bash
-   sudo apt-get update
-   sudo apt-get install -y podman
-   ```
+2. Run the installer. When prompted, allow it to install the **Podman CLI** and initialize a **Podman machine** backed by WSL2.
 
-2. Verify the installation:
+3. After installation, open a new PowerShell or Command Prompt window and verify:
 
-   ```bash
+   ```powershell
    podman --version
+   podman machine list
    ```
 
-3. Install **podman-compose** (the Compose-compatible front-end):
+   The machine should be in the **Running** state. If it is not, start it:
 
-   ```bash
-   sudo apt-get install -y python3-pip
-   pip3 install podman-compose
+   ```powershell
+   podman machine start
    ```
 
-   Or, if `pipx` is available:
+4. Install **podman-compose** (the Compose-compatible front-end):
 
-   ```bash
-   pipx install podman-compose
+   ```powershell
+   pip install podman-compose
    ```
 
-4. Verify podman-compose:
+   Verify the installation:
 
-   ```bash
+   ```powershell
    podman-compose --version
    ```
 
 ## Quick start
 
-All commands below are run inside the **Ubuntu WSL2 terminal** from the root of this repository.
+All commands below are run from a **Windows PowerShell or Command Prompt** window from the root of this repository.
 
 1. **Copy the example environment file and set your SA password:**
 
-   ```bash
+   ```powershell
    cp .env.example .env
    ```
 
@@ -116,7 +113,7 @@ All commands below are run inside the **Ubuntu WSL2 terminal** from the root of 
 
 ## How persistence works
 
-SQL Server stores its data files under `/var/opt/mssql` inside the container. The `docker-compose.yml` maps that directory to a named Podman volume (`sqlserver-data`), which is managed by Podman on your local machine (inside WSL2). The data persists as long as the volume exists — even if you remove and recreate the container.
+SQL Server stores its data files under `/var/opt/mssql` inside the container. The `docker-compose.yml` maps that directory to a named Podman volume (`sqlserver-data`), which is managed by Podman (via the WSL2 backend) on your Windows machine. The data persists as long as the volume exists — even if you remove and recreate the container.
 
 ## Configuration
 
