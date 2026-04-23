@@ -80,7 +80,7 @@ All commands below are run from a **Windows PowerShell or Command Prompt** windo
 2. **Start the container:**
 
    ```bash
-   podman-compose up -d
+   docker-compose up -d
    ```
 
 3. **Connect to SQL Server:**
